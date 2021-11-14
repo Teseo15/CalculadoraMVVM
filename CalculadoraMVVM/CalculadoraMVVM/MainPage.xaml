@@ -49,17 +49,6 @@
     <ContentPage.Content>
         <AbsoluteLayout>
             <StackLayout Style="{DynamicResource MyStackLayout}">
-                <Label HorizontalOptions="End" Padding="8,0">
-                    <Label.FormattedText>
-                        <FormattedString>
-                            <FormattedString.Spans>
-                                <Span x:Name="spnFirst" Text="12" FontSize="36" TextColor="#fff"/>
-                                <Span x:Name="spnSecond" Text=" x " FontSize="32" TextColor="#d86d6f"/>
-                                <Span x:Name="spnThird" Text="12" FontSize="36" TextColor="#fff"/>
-                            </FormattedString.Spans>
-                        </FormattedString>
-                    </Label.FormattedText>
-                </Label>
                 <Label x:Name="lblNumber" HorizontalOptions="End" Text="{Binding HistoryString}" TextColor="#fff" Margin="0,0,16,0" FontSize="54" FontAttributes="Bold"/>
             </StackLayout>
             <Frame Style="{DynamicResource Frame1}"/>
@@ -70,13 +59,19 @@
                                  Command="{Binding AddCommand}" />
                     </Frame>
                     <Frame Grid.Column="1" Grid.Row="0" Padding="0" Margin="12" CornerRadius="12" BackgroundColor="#282b33">
-                        <Button TextColor="#37ae9a"  FontSize="25" VerticalOptions="Fill" Text="-" BackgroundColor="#282b33"/>
+                        <Button TextColor="#37ae9a"  FontSize="25" VerticalOptions="Fill" Text="-" 
+                                BackgroundColor="#282b33"
+                                Command="{Binding RestarCommand}"/>
                     </Frame>
                     <Frame Grid.Column="2" Grid.Row="0" Padding="0" Margin="12" CornerRadius="12" BackgroundColor="#282b33">
-                        <Button TextColor="#37ae9a" FontSize="36" VerticalOptions="Fill" Text="*" TextTransform="None" BackgroundColor="#282b33" />
+                        <Button TextColor="#37ae9a" FontSize="36" VerticalOptions="Fill" Text="*" 
+                                TextTransform="None" BackgroundColor="#282b33"
+                                 Command="{Binding MultiplicarCommand}"/>
                     </Frame>
                     <Frame Grid.Column="3" Grid.Row="0" Padding="0" Margin="12" CornerRadius="12" BackgroundColor="#282b33">
-                        <Button TextColor="#37ae9a" Padding="4,0,0,2" FontSize="42" VerticalOptions="Fill" Text="÷" BackgroundColor="#282b33"/>
+                        <Button TextColor="#37ae9a" Padding="4,0,0,2" FontSize="42" VerticalOptions="Fill" 
+                                Text="÷" BackgroundColor="#282b33"
+                                 Command="{Binding DividirCommand}"/>
                     </Frame>
                     <Frame Grid.Column="0" Grid.Row="1" Padding="0" Margin="12" CornerRadius="12" BackgroundColor="#282b33">
                         <Button 

@@ -9,10 +9,13 @@ namespace CalculadoraMVVM.ViewModel
     {
         string currentEntry = "0";
         string historyString = "";
-        bool isSumDisplayed = false;
-        double accumulatedSum = 0;
+		bool isSumDisplayed = false;
+		string accion = "0";
+		double accumulatedSum = 0;
+		
 
-        public CalculadoraViewModel()
+		
+			public CalculadoraViewModel()
 		{
 			ClearCommand = new Command(
 				execute: () =>
@@ -20,7 +23,7 @@ namespace CalculadoraMVVM.ViewModel
 					HistoryString = "";
 					accumulatedSum = 0;
 					CurrentEntry = "0";
-					isSumDisplayed = false;
+					
 					RefreshCanExecutes();
 				});
 
@@ -28,27 +31,10 @@ namespace CalculadoraMVVM.ViewModel
 				execute: () =>
 				{
 					CurrentEntry = "0";
-					isSumDisplayed = false;
+					
 					RefreshCanExecutes();
 				});
-
-			BackspaceCommand = new Command(
-				execute: () =>
-				{
-					CurrentEntry = CurrentEntry.Substring(0, CurrentEntry.Length - 1);
-
-					if (CurrentEntry.Length == 0)
-					{
-						CurrentEntry = "0";
-					}
-
-					RefreshCanExecutes();
-				},
-				canExecute: () =>
-				{
-					return !isSumDisplayed && (CurrentEntry.Length > 1 || CurrentEntry[0] != '0');
-				});
-
+			
 			NumericCommand = new Command<string>(
 				execute: (string parameter) =>
 				{
@@ -64,8 +50,6 @@ namespace CalculadoraMVVM.ViewModel
 				{
 					return isSumDisplayed || CurrentEntry.Length < 16;
 				});
-
-
 
 			DecimalPointCommand = new Command(
 				execute: () =>
@@ -88,9 +72,62 @@ namespace CalculadoraMVVM.ViewModel
 				{
 					double value = Double.Parse(CurrentEntry);
 					HistoryString +=" + ";
+					accion = "+";
 					accumulatedSum +=value;
 					CurrentEntry = accumulatedSum.ToString();
+					isSumDisplayed = true;
+					RefreshCanExecutes();
+				},
+				canExecute: () =>
+				{
+					return !isSumDisplayed;
+				});
+			RestarCommand = new Command(
+				execute: () =>
+				{
+					double value = Double.Parse(CurrentEntry);
+					HistoryString += " - ";
+					accion = "-";
+					if (accumulatedSum == 0)
+                    {
+						accumulatedSum = value;
+                    }
+                    else
+                    {
+						accumulatedSum -= value;
+					}
 					
+					CurrentEntry = accumulatedSum.ToString();
+					isSumDisplayed = true;
+					RefreshCanExecutes();
+				},
+				canExecute: () =>
+				{
+					return !isSumDisplayed;
+				});
+			MultiplicarCommand = new Command(
+				execute: () =>
+				{
+					double value = Double.Parse(CurrentEntry);
+					HistoryString += " * ";
+					accion = "*";
+					accumulatedSum = value;
+					CurrentEntry = accumulatedSum.ToString();
+					isSumDisplayed = true;
+					RefreshCanExecutes();
+				},
+				canExecute: () =>
+				{
+					return !isSumDisplayed;
+				});
+			DividirCommand = new Command(
+				execute: () =>
+				{
+					double value = Double.Parse(CurrentEntry);
+					HistoryString += " / ";
+					accion = "/";
+					accumulatedSum = value;
+					CurrentEntry = accumulatedSum.ToString();
 					isSumDisplayed = true;
 					RefreshCanExecutes();
 				},
@@ -102,22 +139,56 @@ namespace CalculadoraMVVM.ViewModel
 				execute: () =>
 				{
 					double value = Double.Parse(CurrentEntry);
+					switch (accion)
+					{
 
-					accumulatedSum += value;
-					HistoryString += "=" + accumulatedSum.ToString();
-					isSumDisplayed = true;
+						case  "+":
+							
+							Console.WriteLine("VALUE 1s "+value.ToString());
+							Console.WriteLine("ACCUMULATE ", + accumulatedSum);
+							accumulatedSum += value;
+							HistoryString += "=" + accumulatedSum.ToString();
+							currentEntry = "0";
+							break;
+						case "-":
+							
+							accumulatedSum -= value;
+							HistoryString += "=" + accumulatedSum.ToString();
+							currentEntry = "0";
+							break;
+						case "*":
+
+							accumulatedSum *= value;
+							HistoryString += "=" + accumulatedSum.ToString();
+
+							break;
+						case "/":
+
+							accumulatedSum /= value;
+							HistoryString += "=" + accumulatedSum.ToString();
+
+							break;
+						default:
+							Console.WriteLine("Measured value is ");
+							break;
+					}
+					
+	
 					RefreshCanExecutes();
 					
 				},
 					canExecute: () =>
 					{
-						return isSumDisplayed || CurrentEntry.Length < 16;
+						return CurrentEntry.Length < 16;
 					});
 		}
 
 		void RefreshCanExecutes()
 		{
-			((Command)BackspaceCommand).ChangeCanExecute();
+			//	((Command)BackspaceCommand).ChangeCanExecute();
+			((Command)MostrarCommand).ChangeCanExecute();
+			((Command)MultiplicarCommand).ChangeCanExecute();
+			((Command)DividirCommand).ChangeCanExecute();
 			((Command)NumericCommand).ChangeCanExecute();
 			((Command)DecimalPointCommand).ChangeCanExecute();
 			((Command)AddCommand).ChangeCanExecute();
@@ -153,13 +224,17 @@ namespace CalculadoraMVVM.ViewModel
 
 		public ICommand ClearEntryCommand { private set; get; }
 
-		public ICommand BackspaceCommand { private set; get; }
+		//public ICommand BackspaceCommand { private set; get; }
 
 		public ICommand NumericCommand { private set; get; }
 
 		public ICommand DecimalPointCommand { private set; get; }
 
 		public ICommand AddCommand { private set; get; }
+		public ICommand RestarCommand { private set; get; }
+
+		public ICommand MultiplicarCommand { private set; get; }
+		public ICommand DividirCommand { private set; get; }
 
 		public ICommand MostrarCommand { private set; get; }
 
